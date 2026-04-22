@@ -5,8 +5,8 @@
 ## 硬件
 
 - Raspberry Pi
-- 6-DOF 机械臂（6个总线舵机）
-- 相机（640x480）
+- Yahboom Dofbot Pi
+- USB Camera
 
 ## 软件架构
 
