@@ -15,7 +15,7 @@ dofbot_arm/
 ├── grasp_yolo.py          # 主程序：YOLO检测 + 机械臂抓取
 ├── src/
 │   ├── ik.py             # 逆/正运动学
-│   └── chessboard_calibration.py  # 相机标定
+│   └── chessboard_calibration.py  # 相机内参标定
 ├── Arm_Lib/              # 舵机I2C控制库
 ├── config/               # 相机标定参数
 └── models/               # YOLO模型
@@ -24,11 +24,11 @@ dofbot_arm/
 
 ## 使用方法
 
-### 相机标定
+### 相机内参标定
 
-```bash
-# 1. 采集棋盘格图像（建议40张）
-python src/chessboard_calibration.py --mode capture --num 40
+```
+# 1. 采集棋盘格图像（建议20张以上）
+python src/chessboard_calibration.py --mode capture --num 20
 
 # 2. 计算相机内参
 python src/chessboard_calibration.py --mode calibrate
@@ -36,7 +36,7 @@ python src/chessboard_calibration.py --mode calibrate
 
 ### 运行抓取程序
 
-```bash
+```
 python grasp_yolo.py --model models/best.pt
 ```
 

@@ -87,9 +87,7 @@ def classify_color_simple(roi):
     # 正常亮度颜色判断
     if h < 10 or h > 170:
         return 'red', 0.8
-    elif 10 <= h < 25:
-        return 'yellow', 0.8
-    elif 25 <= h < 35:
+    elif 10 <= h < 35:
         return 'yellow', 0.8
     elif 35 <= h < 85:
         return 'green', 0.8
