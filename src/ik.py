@@ -1,10 +1,10 @@
 import math
  
-P = 8
-A1 = 10.5
-A2 = 8.3
-A3 = 8.3+4.2
-A4 = 17.5
+P = 5
+A1 = 12.1
+A2 = 8.4
+A3 = 12.6
+A4 = 18.8
 
 MAX_LEN = A2+A3+A4
 MAX_HIGH = A1+A2+A3+A4
@@ -33,7 +33,7 @@ def _j_degree_convert(joint,j_or_deg):
     return res
  
 def _valid_degree(joint,degree):
-    if -20 <= degree <= 180:
+    if -30 <= degree <= 180:
         return True
  
     else:
@@ -46,7 +46,7 @@ def _valid_j(joint,j):
     if j is None:
         return False
     degree = _j_degree_convert(joint,j)
-    if -20 <= degree <= 180:
+    if -30 <= degree <= 180:
         return True
     else:
         print('joint {} is invalid j:{} degree {}'.format(joint,j,degree))
@@ -113,27 +113,14 @@ def _xyz_alpha_to_j123(x,y,z,alpha):
  
  
 def _xyz_to_j123(x,y,z, alpha=180):
-    MIN_ALPHA = 90  # j2+j3+j4 min value
-    best = None  # (j1, j2, j3, j4, err)
-
-    a = alpha
-    while a >= MIN_ALPHA:
-        valid, j1, j2, j3, j4 = _xyz_alpha_to_j123(x, y, z, a)
-        if valid:
-            # 用关节角反算末端位置，选误差最小的解
-            L = A2 * sin(j2) + A3 * sin(j2 + j3) + A4 * sin(j2 + j3 + j4)
-            H = A1 + A2 * cos(j2) + A3 * cos(j2 + j3) + A4 * cos(j2 + j3 + j4)
-            fx = L * cos(j1)
-            fy = L * sin(j1) - P
-            fz = H
-            err = (fx - x)**2 + (fy - y)**2 + (fz - z)**2
-            if best is None or err < best[4]:
-                best = (j1, j2, j3, j4, err)
-        a -= 0.5
-
-    if best is not None:
-        return True, best[0], best[1], best[2], best[3]
-    return False, None, None, None, None
+    MIN_ALPHA = 90 # j2+j3+j4 min value, 最后一个joint不向后仰
+    valid = False
+    j1, j2, j3, j4 = None, None, None, None
+    while alpha >= MIN_ALPHA and not valid:
+        valid, j1, j2, j3, j4 = _xyz_alpha_to_j123(x,y,z,alpha)
+        if not valid:
+            alpha -= 1
+    return valid, j1, j2, j3, j4
  
  
  
@@ -154,13 +141,13 @@ def backward_kinematics(x, y, z, alpha=180):
     valid, j1, j2, j3, j4 = _xyz_to_j123(x,y,z, alpha)
     deg1, deg2, deg3, deg4 = None, None, None, None
     if valid:
-        deg1 = _j_degree_convert(1, j1)
-        deg2 = _j_degree_convert(2, j2)
-        deg3 = _j_degree_convert(3, j3)
-        deg4 = _j_degree_convert(4, j4)
+        deg1 = round(_j_degree_convert(1,j1),2)
+        deg2 = round(_j_degree_convert(2,j2),2)
+        deg3 = round(_j_degree_convert(3,j3),2)
+        deg4 = round(_j_degree_convert(4,j4),2)
  
-    print('valid:{},deg1:{:.2f},deg2:{:.2f},deg3:{:.2f},deg4:{:.2f}'.format(valid, deg1, deg2, deg3, deg4))
-    print('{} [{:.2f},{:.2f},{:.2f},{:.2f}]'.format(valid, deg1, deg2, deg3, deg4))
+    print('valid:{},deg1:{},deg2:{},deg3:{},deg4:{}'.format(valid,deg1,deg2,deg3,deg4))
+    print('{} [{},{},{},{}]'.format(valid,deg1,deg2,deg3,deg4))
  
     return valid, deg1, deg2, deg3, deg4
  
@@ -177,9 +164,9 @@ def forward_kinematics(deg1,deg2,deg3,deg4):
     height = A1 + A2*cos(j2) + A3*cos(j2+j3) + A4*cos(j2+j3+j4)
     alpha = j2+j3+j4
  
-    z = round(height, 2)
-    x = round(length * cos(j1), 2)
-    y = round(length * sin(j1) - P, 2)
+    z = round(height,2)
+    x = round(length*cos(j1),2)
+    y = round(length*sin(j1)-P,2)
  
  
     # 世界坐标的边界
@@ -203,8 +190,8 @@ def test_ok(x,y,z):
  
  
 if __name__ == '__main__':
-    x = -12.4
-    y = 27.6
-    z = 16
+    x = 1.6
+    y = 4.5
+    z = 8
     test_ok(x,y,z)
     print('done')
