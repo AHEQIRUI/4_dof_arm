@@ -4,7 +4,7 @@
 
 # Demo
 
-![image]()
+![image](https://github.com/AHEQIRUI/4_dof_arm/blob/master/demo/demo.gif)
 
 ## 硬件
 
