@@ -2,6 +2,10 @@
 
 6-DOF 机械臂控制系统（可看作4自由度），基于 Raspberry Pi，使用 YOLOv8 进行视觉引导抓取。
 
+# Demo
+
+![image]()
+
 ## 硬件
 
 - Raspberry Pi
