@@ -24,29 +24,3 @@ dofbot_arm/
 ├── config/               # 相机标定参数
 └── models/               # YOLO模型
 ```
-
-
-## 使用方法
-
-### 相机内参标定
-
-```
-# 1. 采集棋盘格图像（建议20张以上）
-python src/chessboard_calibration.py --mode capture --num 20
-
-# 2. 计算相机内参
-python src/chessboard_calibration.py --mode calibrate
-```
-
-### 运行抓取程序
-
-```
-python grasp_yolo.py --model models/best.pt
-```
-
-### 交互操作
-
-- `d` - 检测物体
-- `g` - 抓取选中目标
-- `q` - 退出
-- 鼠标点击 - 选中检测目标
